@@ -14,4 +14,8 @@ impl<DB: Database> State<DB> {
             cache: HashMap::new(),
         }
     }
+
+    pub fn store(){
+
+    }
 }

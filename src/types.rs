@@ -22,6 +22,7 @@ pub struct Env{
 pub enum Error{
     StackOverflow,
     CodeOutOfBound,
+    InvalidOpcode(u8),
 }
 
 #[derive(PartialEq, Debug)]

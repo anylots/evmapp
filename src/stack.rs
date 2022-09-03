@@ -16,4 +16,8 @@ impl Stack{
             Err(Error::StackOverflow)
         }
     }
+
+    pub fn pop(&mut self)-> U256{
+        return self.0.pop().unwrap()
+    }
 }
