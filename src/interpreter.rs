@@ -49,6 +49,7 @@ pub fn stop() -> OpResult {
 
 pub fn mstore<DB>(ctx: &mut Context<DB>) -> OpResult {
     let value = ctx.stack.pop();
+    let key=ctx.stack.pop();
     // ctx.state.cache
     Ok(OpStep::Continue)
 }

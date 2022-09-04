@@ -15,7 +15,14 @@ impl<DB: Database> State<DB> {
         }
     }
 
-    pub fn store(){
+    pub fn store(&mut self, key: U256, value: U256) {
+        self.cache.insert(key, value);
+    }
 
+    pub fn load(&self, key: U256) -> U256 {
+        match self.cache.get(&key) {
+            Some(value) => value.into(),
+            None=>self.db.get(key)
+        }
     }
 }
