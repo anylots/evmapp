@@ -1,4 +1,4 @@
-use crate::db::spec::Database;
+use crate::storage::spec::Database;
 use ethereum_types::U256;
 use std::collections::HashMap;
 

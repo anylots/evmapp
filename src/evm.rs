@@ -1,4 +1,4 @@
-use crate::db::spec::Database;
+use crate::storage::spec::Database;
 use crate::interpreter;
 use crate::state::State;
 use crate::types::{Env, Error, Log, RunResult};

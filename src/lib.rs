@@ -1,6 +1,6 @@
 pub mod evm;
 pub mod state;
-pub mod db;
+pub mod storage;
 pub mod types;
 pub mod stack;
 pub mod interpreter;

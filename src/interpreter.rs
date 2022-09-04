@@ -1,6 +1,6 @@
-use crate::db::spec::Database;
 use crate::stack::Stack;
 use crate::state::State;
+use crate::storage::spec::Database;
 use crate::types::{Env, Error, Log, OpResult, OpStep, RunResult};
 use ethereum_types::U256;
 
@@ -22,7 +22,7 @@ pub fn run<DB: Database>(code: &[u8], env: &Env, state: &State<DB>) -> RunResult
     };
 
     loop {
-        if ctx.pc > ctx.code.len() {
+        if ctx.pc >= ctx.code.len() {
             return Err(Error::CodeOutOfBound);
         }
         match exec_operation(ctx.code[ctx.pc], &mut ctx) {

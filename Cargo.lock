@@ -163,6 +163,7 @@ name = "evmapp"
 version = "0.1.0"
 dependencies = [
  "ethereum-types",
+ "hex",
  "serde",
  "serde_json",
  "serde_with",
