@@ -1,3 +1,7 @@
+use ethereum_types::U256;
+
+use crate::types::{Error, OpResult};
+
 const MAX_SIZE: usize = 65536;
 const WORD_SIZE: usize = 32;
 
@@ -17,7 +21,7 @@ impl Memory {
         Ok(())
     }
 
-    pub fn mstore(&mut self, key: usize, value: u8) {
+    pub fn mstore(&mut self, key: usize, value: U256) -> Result<(), Error> {
         if key >= MAX_SIZE - WORD_SIZE {
             return Err(Error::MemoryOverflow);
         }

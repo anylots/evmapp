@@ -23,6 +23,8 @@ pub enum Error{
     StackOverflow,
     CodeOutOfBound,
     InvalidOpcode(u8),
+    MemoryOverflow,
+    MemoryOutOfBound,
 }
 
 #[derive(PartialEq, Debug)]

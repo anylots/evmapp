@@ -22,7 +22,7 @@ impl<DB: Database> State<DB> {
     pub fn load(&self, key: U256) -> U256 {
         match self.cache.get(&key) {
             Some(value) => value.into(),
-            None=>self.db.get(key)
+            None => self.db.get(key),
         }
     }
 }

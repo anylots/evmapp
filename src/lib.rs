@@ -4,3 +4,4 @@ pub mod storage;
 pub mod types;
 pub mod stack;
 pub mod interpreter;
+pub mod memory;

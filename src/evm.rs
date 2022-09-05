@@ -1,6 +1,6 @@
-use crate::storage::spec::Database;
 use crate::interpreter;
 use crate::state::State;
+use crate::storage::spec::Database;
 use crate::types::{Env, Error, Log, RunResult};
 
 pub struct EVM<'a, DB> {
@@ -17,7 +17,7 @@ impl<'a, DB: Database> EVM<'a, DB> {
     }
 
     pub fn run(&mut self, env: &Env) -> RunResult {
-        let res = interpreter::run(self.code, env, &self.state);
+        let res = interpreter::run(self.code, env, &mut self.state);
         return res;
     }
 }
