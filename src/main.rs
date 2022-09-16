@@ -7,7 +7,8 @@ use evmapp::types::{Env, RunResult};
 
 fn main() {
     let database = ramdb::RamDB::new();
-    let code = hex::decode("60806040").unwrap();
+    //6080 6040 52 60ff 60ff 01 6080 52 6020 6080 f3
+    let code = hex::decode("608060405260ff60ff0160805260206080f3").unwrap();
 
     let env = Env {
         caller: Address::zero(),
@@ -22,4 +23,6 @@ fn main() {
     let result: RunResult = evm.run(&env);
 
     println!("result is {}", result.is_ok());
+    println!("result is {}", result.is_ok());
+
 }

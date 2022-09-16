@@ -28,4 +28,13 @@ impl Memory {
         self.resize_for(key + WORD_SIZE)?;
         Ok(value.to_big_endian(&mut self.0[key..key + WORD_SIZE]))
     }
+
+    pub fn mview(&mut self, start: usize, len: usize) -> Result<&[u8], Error> {
+        let end = start.checked_add(len).ok_or(Error::MemoryOutOfBound)?;
+        if end <= self.0.len() {
+            Ok(&self.0[start..end])
+        } else {
+            Err(Error::MemoryOutOfBound)
+        }
+    }
 }

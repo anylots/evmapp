@@ -18,6 +18,7 @@ impl<'a, DB: Database> EVM<'a, DB> {
 
     pub fn run(&mut self, env: &Env) -> RunResult {
         let res = interpreter::run(self.code, env, &mut self.state);
+        println!("run finish");
         return res;
     }
 }

@@ -39,9 +39,11 @@ pub fn run<DB: Database>(code: &[u8], env: &Env, state: &mut State<DB>) -> RunRe
 pub fn exec_operation<DB: Database>(opcode: u8, ctx: &mut Context<DB>) -> OpResult {
     match opcode {
         0x00 => stop(),
+        0x01 => add(ctx),
         0x52 => mstore(ctx),
         0x55 => sstore(ctx),
         0x60 => push1(ctx),
+        0xf3=>evm_return(ctx),
         // 0x61 => push1(ctx),
         opcode => Err(Error::InvalidOpcode(opcode)),
     }
@@ -49,6 +51,21 @@ pub fn exec_operation<DB: Database>(opcode: u8, ctx: &mut Context<DB>) -> OpResu
 
 pub fn stop() -> OpResult {
     Ok(OpStep::Return(Vec::new()))
+}
+
+pub fn evm_return<DB: Database>(ctx: &mut Context<DB>) -> OpResult {
+    let start=ctx.stack.pop().as_usize();
+    let len=ctx.stack.pop().as_usize();
+    Ok(OpStep::Return(ctx.memory.mview(start, len)?.to_vec()))
+}
+
+
+pub fn add<DB: Database>(ctx: &mut Context<DB>) -> OpResult {
+    let left = ctx.stack.pop();
+    let right = ctx.stack.pop();
+    ctx.stack.push_u256(left + right)?;
+    ctx.pc += 1;
+    Ok(OpStep::Continue)
 }
 
 pub fn mstore<DB: Database>(ctx: &mut Context<DB>) -> OpResult {
