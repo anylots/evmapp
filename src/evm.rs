@@ -1,7 +1,7 @@
 use crate::interpreter;
 use crate::state::State;
 use crate::storage::spec::Database;
-use crate::types::{Env,RunResult};
+use crate::types::{Env, RunResult};
 
 pub struct EVM<'a, DB> {
     code: &'a [u8],
@@ -17,8 +17,12 @@ impl<'a, DB: Database> EVM<'a, DB> {
     }
 
     pub fn run(&mut self, env: &Env) -> RunResult {
-        let res = interpreter::run(self.code, env, &mut self.state);
-        println!("run finish");
-        return res;
+        let rt = interpreter::run(self.code, env, &mut self.state);
+        match rt {
+            Ok(_) => self.state.commit(),
+            Err(_) => self.state.rollback(),
+        }
+        println!("evm run finish");
+        return rt;
     }
 }
