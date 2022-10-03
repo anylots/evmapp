@@ -1,6 +1,5 @@
 use crate::memory::Memory;
 use crate::operation;
-use crate::operation;
 use crate::stack::Stack;
 use crate::state::State;
 use crate::storage::spec::Database;
@@ -9,10 +8,10 @@ use crate::types::{Env, Error, Log, OpResult, OpStep, RunResult};
 pub struct Context<'a, DB> {
     pub code: &'a [u8],
     pub stack: Stack,
-    pub pub memory: Memory,
+    pub memory: Memory,
     pub state: &'a mut State<DB>,
     pub pc: usize,
-    pub pub logs: Vec<Log>,
+    pub logs: Vec<Log>,
 }
 
 pub fn run<DB: Database>(code: &[u8], env: &Env, state: &mut State<DB>) -> RunResult {
