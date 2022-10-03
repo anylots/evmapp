@@ -1,17 +1,17 @@
 use crate::memory::Memory;
+use crate::operation;
 use crate::stack::Stack;
 use crate::state::State;
 use crate::storage::spec::Database;
 use crate::types::{Env, Error, Log, OpResult, OpStep, RunResult};
-use ethereum_types::U256;
 
 pub struct Context<'a, DB> {
     pub code: &'a [u8],
     pub stack: Stack,
-    memory: Memory,
+    pub memory: Memory,
     pub state: &'a mut State<DB>,
     pub pc: usize,
-    logs: Vec<Log>,
+    pub logs: Vec<Log>,
 }
 
 pub fn run<DB: Database>(code: &[u8], env: &Env, state: &mut State<DB>) -> RunResult {
@@ -38,60 +38,14 @@ pub fn run<DB: Database>(code: &[u8], env: &Env, state: &mut State<DB>) -> RunRe
 
 pub fn exec_operation<DB: Database>(opcode: u8, ctx: &mut Context<DB>) -> OpResult {
     match opcode {
-        0x00 => stop(),
-        0x01 => add(ctx),
-        0x52 => mstore(ctx),
-        0x55 => sstore(ctx),
-        0x60 => push1(ctx),
-        0xf3=>evm_return(ctx),
+        0x00 => operation::stop(),
+        0x01 => operation::add(ctx),
+        0x02 => operation::mul(ctx),
+        0x52 => operation::mstore(ctx),
+        0x55 => operation::sstore(ctx),
+        0x60 => operation::push1(ctx),
+        0xf3 => operation::evm_return(ctx),
         // 0x61 => push1(ctx),
         opcode => Err(Error::InvalidOpcode(opcode)),
-    }
-}
-
-pub fn stop() -> OpResult {
-    Ok(OpStep::Return(Vec::new()))
-}
-
-pub fn evm_return<DB: Database>(ctx: &mut Context<DB>) -> OpResult {
-    let start=ctx.stack.pop().as_usize();
-    let len=ctx.stack.pop().as_usize();
-    Ok(OpStep::Return(ctx.memory.mview(start, len)?.to_vec()))
-}
-
-
-pub fn add<DB: Database>(ctx: &mut Context<DB>) -> OpResult {
-    let left = ctx.stack.pop();
-    let right = ctx.stack.pop();
-    ctx.stack.push_u256(left + right)?;
-    ctx.pc += 1;
-    Ok(OpStep::Continue)
-}
-
-pub fn mstore<DB: Database>(ctx: &mut Context<DB>) -> OpResult {
-    let key = ctx.stack.pop().as_usize();
-    let value = ctx.stack.pop();
-    ctx.memory.mstore(key, value)?;
-    ctx.pc += 1;
-    Ok(OpStep::Continue)
-}
-
-pub fn sstore<DB: Database>(ctx: &mut Context<DB>) -> OpResult {
-    let key = ctx.stack.pop();
-    let value: U256 = ctx.stack.pop();
-    ctx.state.store(key, value);
-    ctx.pc += 1;
-    Ok(OpStep::Continue)
-}
-
-pub fn push1<DB>(ctx: &mut Context<DB>) -> OpResult {
-    if ctx.pc + 1 < ctx.code.len() {
-        let slice = &ctx.code[ctx.pc + 1..ctx.pc + 2];
-        let value = U256::from_big_endian(slice);
-        ctx.stack.push_u256(value)?;
-        ctx.pc += 2;
-        Ok(OpStep::Continue)
-    } else {
-        Err(Error::StackOverflow)
     }
 }

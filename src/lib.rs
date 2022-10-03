@@ -5,3 +5,4 @@ pub mod types;
 pub mod stack;
 pub mod interpreter;
 pub mod memory;
+pub mod operation;

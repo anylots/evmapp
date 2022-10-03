@@ -25,6 +25,7 @@ pub enum Error{
     InvalidOpcode(u8),
     MemoryOverflow,
     MemoryOutOfBound,
+    StateStoreError,
 }
 
 #[derive(PartialEq, Debug)]

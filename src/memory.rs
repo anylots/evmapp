@@ -1,6 +1,6 @@
 use ethereum_types::U256;
 
-use crate::types::{Error, OpResult};
+use crate::types::Error;
 
 const MAX_SIZE: usize = 65536;
 const WORD_SIZE: usize = 32;

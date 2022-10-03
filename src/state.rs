@@ -1,4 +1,4 @@
-use crate::storage::spec::Database;
+use crate::{storage::spec::Database, types::Error};
 use ethereum_types::U256;
 use std::collections::HashMap;
 
@@ -24,5 +24,9 @@ impl<DB: Database> State<DB> {
             Some(value) => value.into(),
             None => self.db.get(key),
         }
+    }
+
+    pub fn commit(&mut self) {
+        self.cache.drain().for_each(|(k, v)| self.db.set(k, v));
     }
 }
