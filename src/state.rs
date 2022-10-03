@@ -29,4 +29,8 @@ impl<DB: Database> State<DB> {
     pub fn commit(&mut self) {
         self.cache.drain().for_each(|(k, v)| self.db.set(k, v));
     }
+
+    pub fn rollback(&mut self) {
+        self.cache.clear();
+    }
 }

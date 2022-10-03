@@ -11,17 +11,18 @@ pub struct EVM<'a, DB> {
 impl<'a, DB: Database> EVM<'a, DB> {
     pub fn new(db: DB, code: &'a [u8]) -> Self {
         Self {
-            code: code,
+            code,
             state: State::new(db),
         }
     }
 
     pub fn run(&mut self, env: &Env) -> RunResult {
-        let res = interpreter::run(self.code, env, &mut self.state);
-        if res.is_ok() {
-            self.state.commit();
+        let rt = interpreter::run(self.code, env, &mut self.state);
+        match rt {
+            Ok(_) => self.state.commit(),
+            Err(_) => self.state.rollback(),
         }
-        println!("run finish");
-        return res;
+        println!("evm run finish");
+        return rt;
     }
 }

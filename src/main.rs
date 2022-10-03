@@ -5,7 +5,7 @@ use evmapp::types::{Env, RunResult};
 
 fn main() {
     let database = ramdb::RamDB::new();
-    //6080 6040 52 6001 6001 01 6080 52 6001 6002 55 6020 6080 f3
+    //6080 6040 52 6001 6001a 01 6080 52 6001 6002 55 6020 6080 f3
     let code = hex::decode("60806040526001600101608052600160025560206080f3").unwrap();
 
     let env = Env {
@@ -18,10 +18,9 @@ fn main() {
 
     let mut evm = evm::EVM::new(database, &code);
     let result: RunResult = evm.run(&env);
-    println!("result is {}", result.is_ok());
 
-    let t = result.unwrap().0;
-    for i in &t[t.len() - 5..t.len()] {
+    let vec = result.unwrap().0;
+    for i in &vec[vec.len() - 5..vec.len()] {
         println!("value is {}", i);
     }
 }
