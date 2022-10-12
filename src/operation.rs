@@ -45,7 +45,19 @@ pub fn sstore<DB: Database>(ctx: &mut Context<DB>) -> OpResult {
     Ok(OpStep::Continue)
 }
 
-pub fn push1<DB>(ctx: &mut Context<DB>) -> OpResult {
+pub fn pushn<DB>(ctx: &mut Context<DB>, n: usize) -> OpResult {
+    if ctx.pc + n < ctx.code.len() {
+        let slice = &ctx.code[ctx.pc + 1..ctx.pc + n + 1];
+        let value = U256::from_big_endian(slice);
+        ctx.stack.push_u256(value)?;
+        ctx.pc += n + 1;
+        Ok(OpStep::Continue)
+    } else {
+        Err(Error::StackOverflow)
+    }
+}
+
+pub fn push<DB>(ctx: &mut Context<DB>) -> OpResult {
     if ctx.pc + 1 < ctx.code.len() {
         let slice = &ctx.code[ctx.pc + 1..ctx.pc + 2];
         let value = U256::from_big_endian(slice);
