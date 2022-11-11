@@ -4,6 +4,7 @@ use evmapp::storage::ramdb;
 use evmapp::types::{Env, RunResult};
 
 fn main() {
+
     let database = ramdb::RamDB::new();
     //6080 6040 52 6001 6001a 01 6080 52 6001 6002 55 6020 6080 f3
     let code = hex::decode("60806040526001600101608052600160025560206080f3").unwrap();
