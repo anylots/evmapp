@@ -7,6 +7,7 @@ pub struct Log{
     pub data:Vec<u8>,
 }
 
+// Basic parameters required to run evm.
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Env{

@@ -2,6 +2,8 @@ use ethereum_types::{Address, U256};
 use evmapp::evm;
 use evmapp::storage::ramdb;
 use evmapp::types::{Env, RunResult};
+extern crate alloc;
+
 
 fn main() {
     let data = String::from("sdgsdg");

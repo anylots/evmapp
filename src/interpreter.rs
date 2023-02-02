@@ -5,16 +5,27 @@ use crate::state::State;
 use crate::storage::spec::Database;
 use crate::types::{Env, Error, Log, OpResult, OpStep, RunResult};
 
+// Evm context, For each contract call, a new evm context will be created.
 pub struct Context<'a, DB> {
+    // The byte code of smart contract, Each instruction use one byte, and can support 256 different instructions.
     pub code: &'a [u8],
+    // Evm stack, with capacity of 1024, and 32bytes of each item.
     pub stack: Stack,
+    // Evm memory
     pub memory: Memory,
+    // Eth world state abstraction layer
     pub state: &'a mut State<DB>,
+    // Program counter, Using for track the location of the next instruction
     pub pc: usize,
+    // Execution log
     pub logs: Vec<Log>,
 }
 
+
+// Execute contract code using stack structure.
 pub fn run<DB: Database>(code: &[u8], env: &Env, state: &mut State<DB>) -> RunResult {
+
+    // create new evm context
     let mut ctx = Context {
         code,
         stack: Stack::new(),
@@ -24,6 +35,7 @@ pub fn run<DB: Database>(code: &[u8], env: &Env, state: &mut State<DB>) -> RunRe
         logs: Vec::new(),
     };
 
+    // execute instruction stream of contract
     loop {
         if ctx.pc >= ctx.code.len() {
             return Err(Error::CodeOutOfBound);
