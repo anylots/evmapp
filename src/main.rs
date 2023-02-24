@@ -50,11 +50,11 @@ fn main() {
     let database = ramdb::RamDB::new();
     let mut evm = evm::EVM::new(database, &code);
 
-    // Step3. Run evm to handle calls.
+    // Step3. Run evm to handle call.
     let result: RunResult = evm.run(&env);
 
-    let vec = result.unwrap().0;
-    for i in &vec[vec.len() - 1..vec.len()] {
+    let vec_cal = result.unwrap().0;
+    for i in &vec_cal[vec_cal.len() - 1..vec_cal.len()] {
         //This is not a test case, print the result value directly
         println!("value is {}", i);
     }
