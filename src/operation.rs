@@ -2,6 +2,7 @@ use crate::interpreter::Context;
 use crate::storage::spec::Database;
 use crate::types::{Env, Error, OpResult, OpStep};
 use ethereum_types::U256;
+use crate::host;
 
 pub fn stop() -> OpResult {
     Ok(OpStep::Return(Vec::new()))
@@ -67,4 +68,13 @@ pub fn push<DB>(ctx: &mut Context<DB>) -> OpResult {
     } else {
         Err(Error::StackOverflow)
     }
+}
+
+pub fn blockNum<DB>(ctx: &mut Context<DB>) -> OpResult {
+    let num = host::get_blockNum();
+    let value = U256::from_big_endian(&num.to_be_bytes());
+    ctx.stack.push_u256(value)?;
+    ctx.pc += 1;
+    Ok(OpStep::Continue)
+
 }

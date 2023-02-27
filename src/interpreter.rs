@@ -53,12 +53,12 @@ pub fn exec_operation<DB: Database>(opcode: u8, ctx: &mut Context<DB>) -> OpResu
         0x00 => operation::stop(),
         0x01 => operation::add(ctx),
         0x02 => operation::mul(ctx),
+        0x43 => operation::blockNum(ctx),
         0x52 => operation::mstore(ctx),
         0x55 => operation::sstore(ctx),
         0x60 => operation::pushn(ctx, 1),
         0x61 => operation::pushn(ctx, 2),
         0xf3 => operation::evm_return(ctx),
-        // 0x61 => push1(ctx),
         opcode => Err(Error::InvalidOpcode(opcode)),
     }
 }
