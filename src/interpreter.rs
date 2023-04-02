@@ -21,29 +21,32 @@ pub struct Context<'a, DB> {
     pub logs: Vec<Log>,
 }
 
+impl<'a, DB: Database> Context<'a, DB> {
+    fn new(code: &'a [u8], state: &'a mut State<DB>) -> Self {
+        Self {
+            code,
+            stack: Stack::new(),
+            memory: Memory::new(),
+            state,
+            pc: 0,
+            logs: Vec::new(),
+        }
+    }
+}
+
 
 // Execute contract code using stack structure.
 pub fn run<DB: Database>(code: &[u8], env: &Env, state: &mut State<DB>) -> RunResult {
 
-    // create new evm context
-    let mut ctx = Context {
-        code,
-        stack: Stack::new(),
-        memory: Memory::new(),
-        state,
-        pc: 0,
-        logs: Vec::new(),
-    };
-
-    // execute instruction stream of contract
+    let mut ctx = Context::new(code, state);
     loop {
-        if ctx.pc >= ctx.code.len() {
-            return Err(Error::CodeOutOfBound);
-        }
         match exec_operation(ctx.code[ctx.pc], &mut ctx) {
             Err(err) => return Err(err),
-            Ok(OpStep::Continue) => (),
             Ok(OpStep::Return(v)) => return Ok((v, ctx.logs)),
+            _ => (),
+        }
+        if ctx.pc >= ctx.code.len() {
+            return Err(Error::CodeOutOfBound);
         }
     }
 }
