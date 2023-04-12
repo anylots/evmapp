@@ -5,16 +5,14 @@ use evmapp::types::{Env, RunResult};
 
 //Use evm to run a small piece of contract code.
 fn main() {
-
-
     //Step0. Prepare evm bytecode
 
     /*
      * en. This is a piece of code that calculates the addition of two numbers in the contract.
      * We try to pass in 16 + 1 (0x10 + 0x01), use evm to calculate, and expect the result = 17.
-     * 
+     *
      * zh. 这是一段计算两个数相加的代码, 我们尝试传入16 + 1（0x10 + 0x01），用evm计算，期望结果=17。
-     * 
+     *
      * ===code===
      * 6080:  PUSH1 0x80  /* 0x40 - 0x5f (32 字节): 空闲内存指针具体的值 = 0x80 = 4 x 32, 运行solidity的时候，需要预留 4 个 32 字节的插槽 */
      * 6040:  PUSH1 0x40  /* 0x40 - 0x5f (32 字节): 存储空闲内存指针值的地方 = 0x40 = 2 x 32, 也就是第三个插槽 */
@@ -36,7 +34,6 @@ fn main() {
         hex::decode("6080 6040 52 6010 6001 01 6080 52 6001 6002 55 6020 6080 f3".replace(" ", ""))
             .unwrap();
 
-
     // Step1. Prepare basic parameters required to run evm.
     let env = Env {
         caller: Address::zero(),
@@ -44,6 +41,7 @@ fn main() {
         number: 0.into(),
         chainid: 1.into(),
         calldata: vec![],
+        value: 0.into(),
     };
 
     // Step2. Create evm instance.

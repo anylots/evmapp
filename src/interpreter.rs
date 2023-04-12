@@ -17,18 +17,21 @@ pub struct Context<'a, DB> {
     pub state: &'a mut State<DB>,
     // Program counter, Using for track the location of the next instruction
     pub pc: usize,
+    // Basic parameters required to run evm.
+    pub env: &'a Env,
     // Execution log
     pub logs: Vec<Log>,
 }
 
 impl<'a, DB: Database> Context<'a, DB> {
-    fn new(code: &'a [u8], state: &'a mut State<DB>) -> Self {
+    fn new(code: &'a [u8], env:&'a Env, state: &'a mut State<DB>) -> Self {
         Self {
             code,
             stack: Stack::new(),
             memory: Memory::new(),
             state,
             pc: 0,
+            env:env,
             logs: Vec::new(),
         }
     }
@@ -38,7 +41,7 @@ impl<'a, DB: Database> Context<'a, DB> {
 // Execute contract code using stack structure.
 pub fn run<DB: Database>(code: &[u8], env: &Env, state: &mut State<DB>) -> RunResult {
 
-    let mut ctx = Context::new(code, state);
+    let mut ctx = Context::new(code, env, state);
     loop {
         match exec_operation(ctx.code[ctx.pc], &mut ctx) {
             Err(err) => return Err(err),
@@ -56,7 +59,11 @@ pub fn exec_operation<DB: Database>(opcode: u8, ctx: &mut Context<DB>) -> OpResu
         0x00 => operation::stop(),
         0x01 => operation::add(ctx),
         0x02 => operation::mul(ctx),
-        0x43 => operation::blockNum(ctx),
+        0x34 => operation::callvalue(ctx),
+        0x35 => operation::calldata_load(ctx),
+        0x36 => operation::calldata_size(ctx),
+        0x37 => operation::calldata_copy(ctx),
+        0x43 => operation::block_num(ctx),
         0x52 => operation::mstore(ctx),
         0x55 => operation::sstore(ctx),
         0x60 => operation::pushn(ctx, 1),
