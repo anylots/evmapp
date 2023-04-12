@@ -1,7 +1,7 @@
 use crate::host;
 use crate::interpreter::Context;
 use crate::storage::spec::Database;
-use crate::types::{Env, Error, OpResult, OpStep};
+use crate::types::{Error, OpResult, OpStep};
 use ethereum_types::U256;
 
 pub fn stop() -> OpResult {

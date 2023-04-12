@@ -41,7 +41,7 @@ fn main() {
         number: 0.into(),
         chainid: 1.into(),
         calldata: vec![],
-        value: 0.into(),
+        value: 100000.into(),
     };
 
     // Step2. Create evm instance.
