@@ -58,6 +58,12 @@ pub fn pushn<DB>(ctx: &mut Context<DB>, n: usize) -> OpResult {
     }
 }
 
+pub fn push0<DB>(ctx: &mut Context<DB>) -> OpResult {
+    ctx.stack.push_u256(0.into())?;
+    ctx.pc += 1;
+    Ok(OpStep::Continue)
+}
+
 pub fn push<DB>(ctx: &mut Context<DB>) -> OpResult {
     if ctx.pc + 1 < ctx.code.len() {
         let slice = &ctx.code[ctx.pc + 1..ctx.pc + 2];
