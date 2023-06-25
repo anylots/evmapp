@@ -114,7 +114,7 @@ pub fn calldata_copy<DB>(ctx: &mut Context<DB>) -> OpResult {
 }
 
 pub fn block_num<DB>(ctx: &mut Context<DB>) -> OpResult {
-    let num = host::get_blockNum();
+    let num = host::get_block_num();
     let value = U256::from_big_endian(&num.to_be_bytes());
     ctx.stack.push_u256(value)?;
     ctx.pc += 1;

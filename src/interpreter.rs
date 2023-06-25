@@ -52,6 +52,10 @@ pub fn run<DB: Database>(code: &[u8], env: &Env, state: &mut State<DB>) -> RunRe
     }
 }
 
+/*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+/*                       EVM OPERATION                        */
+/*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
+// execute by opcode
 pub fn exec_operation<DB: Database>(opcode: u8, ctx: &mut Context<DB>) -> OpResult {
     match opcode {
         0x00 => operation::stop(),
